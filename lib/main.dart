@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/lists.dart';
 import 'package:my_app/login.dart';
+import 'package:my_app/dependencies.dart';
+import 'package:my_app/utils/database.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await DatabaseHelper().init();
+
   runApp(const MyApp());
 }
 
@@ -32,7 +39,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      home: const Login(),
+      home: const HomePage(),
     );
   }
 }
