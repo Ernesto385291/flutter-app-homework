@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:sqflite/sqflite.dart' as sqflite;
+import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 import 'package:my_app/lists.dart';
 import 'package:my_app/login.dart';
 import 'package:my_app/dependencies.dart';
@@ -6,6 +9,11 @@ import 'package:my_app/utils/database.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  if (kIsWeb) {
+    sqfliteFfiWebInit();
+    sqflite.databaseFactory = databaseFactoryFfiWeb;
+  }
 
   await DatabaseHelper().init();
 

@@ -40,6 +40,7 @@ dependencies:
   flutter_card_swiper: ^7.0.2
   path_provider: ^2.1.1
   sqflite: #se adapta a la version dart
+  sqflite_common_ffi_web:
   path: ^1.8.3
 
 dev_dependencies:
