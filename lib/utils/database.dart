@@ -18,24 +18,22 @@ class DatabaseHelper {
 
   // this opens the database (and creates it if it doesn't exist)
   Future<void> init() async {
-    final path;
+    final String dbPath;
 
-    ///Obtención de la dirección/path para almacenar la BD
+    // Obtención de la dirección/path para almacenar la BD
     if (kIsWeb) {
-      //Indicamos si se va abrir en web
-      //Dirección en donde se guardara la BD
-      path = "/assets/db"; //Local dentro de nuestra app (visible)
+      // En web, usa un nombre simple; se almacenará en IndexedDB
+      dbPath = _databaseName;
     } else {
-      //Se almacena de forma oculta dentro de la app
+      // En móvil/escritorio, almacena en el directorio de la app
       final documentsDirectory =
           (await getApplicationDocumentsDirectory()).path;
-      path = join(documentsDirectory, _databaseName);
+      dbPath = join(documentsDirectory, _databaseName);
     }
 
-    ///fin de obtención
-    ///CRAER Y ABRIR LA BD
+    // Crear y abrir la BD
     _db = await openDatabase(
-      path,
+      dbPath,
       version: _databaseVersion,
       onCreate: _onCreate,
     );
@@ -57,5 +55,30 @@ class DatabaseHelper {
   // inserted row.
   Future<int> insert(Map<String, dynamic> row) async {
     return await _db.insert(table, row);
+  }
+
+  // Query all rows ordered by id desc
+  Future<List<Map<String, dynamic>>> queryAll() async {
+    return await _db.query(table, orderBy: '$columnId DESC');
+  }
+
+  // Update a row by id; expects the id in the map
+  Future<int> update(Map<String, dynamic> row) async {
+    final int id = row[columnId] as int;
+    return await _db.update(
+      table,
+      row,
+      where: '$columnId = ?',
+      whereArgs: [id],
+    );
+  }
+
+  // Delete a row by id
+  Future<int> delete(int id) async {
+    return await _db.delete(
+      table,
+      where: '$columnId = ?',
+      whereArgs: [id],
+    );
   }
 }
